@@ -1,8 +1,17 @@
-interface ButtonProps {
-  text?: string
+import { ComponentProps, ReactNode } from "react"
+
+interface ButtonProps extends ComponentProps<'button'>{
+  children: ReactNode
 }
 
 
 export function Button(props: ButtonProps)  {
-  return <button className="bg-gray-100 px-5 py-2 rounded-xl">{props.text || 'Botão'}</button>
+  return (
+  <button 
+    className=" flex justify-between items-center px-5 h-12 bg-gray-500 text-blue font-semibold rounded-xl w-full cursor-pointer transition-colors duration-300 hover:bg-blue hover:text-gray-900"
+    {...props}
+    >
+    {props.children}
+    </button>
+  )
 }
