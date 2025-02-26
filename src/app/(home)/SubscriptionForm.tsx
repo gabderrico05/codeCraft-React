@@ -2,10 +2,12 @@
 
 import { Button } from '@/components/button'
 import { InputField, InputIcon, InputRoot } from '@/components/input'
+import { subscribeToEvent } from '@/http/api'
+import { zodResolver } from '@hookform/resolvers/zod'
 import { ArrowRight, Mail, Subscript, User } from 'lucide-react'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
-import { zodResolver } from '@hookform/resolvers/zod'
 
 const subscriptionSchema = z.object({
   name: z.string().min(3, 'Digite seu nome completo'),
@@ -15,13 +17,25 @@ const subscriptionSchema = z.object({
 type subscriptionSchema = z.infer<typeof subscriptionSchema>
 
 export function SubscriptionForm() {
-  const { register, handleSubmit, formState: {errors} } = useForm<subscriptionSchema>({
+  const router = useRouter()
+  const searchParams = useSearchParams()
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<subscriptionSchema>({
     resolver: zodResolver(subscriptionSchema),
   })
 
-  function onSubscribe(data: subscriptionSchema) {
-    console.log(data)
+  async function onSubscribe({ name, email }: subscriptionSchema) {
+    const referrer = searchParams.get('referrer')
+
+    const { subscriberId } = await subscribeToEvent({ name, email, referrer })
+
+    router.push(`/invite/${subscriberId}`)
   }
+
   return (
     <form
       onSubmit={handleSubmit(onSubscribe)}
@@ -32,7 +46,7 @@ export function SubscriptionForm() {
       </h2>
 
       <div className="space-y-3">
-        <div className='space-y-2'>
+        <div className="space-y-2">
           <InputRoot>
             <InputIcon>
               <User />
@@ -45,23 +59,27 @@ export function SubscriptionForm() {
           </InputRoot>
 
           {errors?.name && (
-            <p className='text-danger text-xs font-semibold'>{errors.name.message}</p>
+            <p className="text-danger text-xs font-semibold">
+              {errors.name.message}
+            </p>
           )}
         </div>
 
-        <div className='space-y-2'>
+        <div className="space-y-2">
           <InputRoot>
             <InputIcon>
               <Mail />
             </InputIcon>
             <InputField
-              type='text'
+              type="text"
               placeholder="E-mail"
               {...register('email')}
             />
           </InputRoot>
           {errors?.email && (
-            <p className='text-danger text-xs font-semibold'>{errors.email.message}</p>
+            <p className="text-danger text-xs font-semibold">
+              {errors.email.message}
+            </p>
           )}
         </div>
       </div>
