@@ -16,7 +16,14 @@ bun dev
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
+
 You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+
+## Backend
+The backend of the application was based on the official Rocketseat repository for the NLW Connect project, available on GitHub. The backend implementation was developed by another group from Rocketseat, while my focus was on developing the frontend.
+
+Reference to the backend repository:
+-[NLW Connect - Node](https://github.com/rocketseat-education/nlw-connect-node.git)
 
 ## Learn More
 
